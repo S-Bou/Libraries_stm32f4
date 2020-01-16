@@ -8,5 +8,14 @@
 
 void PositionServo(uint8_t angle)
 {
-	htim3.Instance->CCR1 = 25;
+	htim3.Instance->CCR1 = angle;
+}
+
+void ContinuousServo(uint8_t init, uint8_t finish)
+{
+	for(uint8_t i=init; i<finish; i++)
+	{
+		htim3.Instance->CCR1 = i;
+		HAL_Delay(100);
+	}
 }
