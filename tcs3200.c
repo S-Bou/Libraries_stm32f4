@@ -119,3 +119,81 @@
 				
 				HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 		}
+
+void CalculeColor(void)
+{	
+	double r,g,b; // r,v,b € [0..1]
+			
+	double offset = 3.0/clear; // compensacion de luminosidad
+	
+	if((offset+(clear/red)) < 1)
+	{
+		r = offset+(clear/red);
+	}else{r = 1.0;}
+
+	if((offset+(clear/green)) < 1)
+	{
+		g = offset+(clear/green);
+	}else{g = 1.0;}
+	
+	if((offset+(clear/blue)) < 1)
+	{
+		b = offset+(clear/blue);
+	}else{b = 1.0;}
+
+	// transformacion RVB -> TSL
+	// r,v,b € [0..1]
+	// t € [0°..360°]; s,l € [%]
+	double t,s,l;
+	double maxRGB, minRGB;
+
+		if(r >= b){maxRGB = r;
+		}else{maxRGB = b;}
+		if(g >= maxRGB){maxRGB = g;}
+		
+		if(r <= b){minRGB = r;
+		}else{minRGB = b;}
+		if(g <= minRGB){minRGB = g;}
+	
+	double delta = maxRGB-minRGB;
+	double somme = maxRGB+minRGB;
+
+ // luminancia basada en valores de colores segun software de diseño grafico
+ l=(somme/2.0);
+
+ if(delta==0.0) // gris
+ {
+ t=s=0.0;
+ }else{
+ //saturacion
+ if ( l < 0.5 ) s = delta / somme;
+ else s = delta / ( 2.0 - delta );
+
+ // tinte
+ double del_R = ( ( ( maxRGB - r ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+ double del_G = ( ( ( maxRGB - g ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+ double del_B = ( ( ( maxRGB - b ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+
+ if ( r == maxRGB ) t = del_B - del_G;
+ else if ( g == maxRGB ) t = ( 1.0 / 3.0 ) + del_R - del_B;
+ else if ( b == maxRGB ) t = ( 2.0 / 3.0 ) + del_G - del_R;
+
+ if ( t < 0 ) t += 1.0;
+ if ( t > 1 ) t -= 1.0;
+ }
+
+ // normalizacion
+t*=360.0; // [0°..360°]
+s*=100.0; // [%]
+l*=100.0; // [%]
+ 
+// 				sprintf(uartComAT, "Color: %f", t);
+//				HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
+//				HAL_Delay(TIME);
+// 
+// 				sprintf(uartComAT, "\r\n");
+//				HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
+//				HAL_Delay(TIME);
+			
+		}
+
