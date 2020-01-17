@@ -13,7 +13,7 @@ Steps for config timer:
 
 #include "servos.h"
 
-void PositionServo(uint8_t angle)
+void PositionServo(uint8_t angle)	// 33, 67
 {
 	htim3.Instance->CCR1 = angle;
 }
