@@ -18,7 +18,7 @@ Description:
    or indirectly by this software, read more about this on the GNU General Public License.								
 */
 
-#include "MY_FLASH.h"
+#include "writeFlash.h"
 
 //Private variables
 //1. sector start address

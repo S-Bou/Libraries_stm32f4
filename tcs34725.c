@@ -1,6 +1,5 @@
 /*##########################################################################################################*/
 #include "tcs34725.h"
-
 /*
 	The slave address of the color sensor is 41 = 0x29.
 	
@@ -8,7 +7,9 @@
 	   Read the id register (address code: 146 = 0x92) and check if we're communicating 
 		 with the device, the id register value should be 68 = 0x44.
 */
-uint8_t count = 3;
+uint8_t count = 0;
+bool tempStore = true;
+bool tempBall = true;
 extern I2C_HandleTypeDef hi2c1;
 extern UART_HandleTypeDef huart2;
 unsigned int Color_Sensor_Address = 0x29<<1;
@@ -102,31 +103,26 @@ void Read_cts34725(void)
 */
 void Store_Colors(void)
 {
-	if(count == 0){PositionServoSensor(28);}	
-	CicleColor();
+	if(count == 0){PositionServoSensor(POSUNO);}	
 	char uartComAT[100];
 	
-if(count == 0)
-	{
-		ColorsThreshold[0] = color;
-		//MY_FLASH_ReadN(0, ColorsThreshold, 4, DATA_TYPE_32);
-		HAL_GPIO_WritePin(RedLed_GPIO_Port, RedLed_Pin, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
-		count++;
-		sprintf(uartComAT, "Init process for store value of colors.\nWaiting color Red:\r\n");
-		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-	}
+	if(count == 0)
+		{
+			ColorsThreshold[0] = color;
+			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
+			sprintf(uartComAT, "Init process for store value of colors.\nWaiting color Red:\r\n");
+			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+		}
 	
-if(count == 1)
-	{
-		ColorsThreshold[1] = color;
-		//MY_FLASH_ReadN(0, ColorsThreshold, 4, DATA_TYPE_32);
-		HAL_GPIO_WritePin(RedLed_GPIO_Port, RedLed_Pin, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
-		count++;
-		sprintf(uartComAT, "Waiting color Green:\r\n");
-		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-	}
+	if(count == 1)
+		{
+			ColorsThreshold[1] = color;
+			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
+			sprintf(uartComAT, "Waiting color Green:\r\n");
+			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+		}
+	
+	if(count == 2){count = 0;}
 	
 }
 /*##########################################################################################################*/
@@ -155,16 +151,23 @@ void Show_console(void)
 /*##########################################################################################################*/
 void CicleColor(void)
 {
-	ContinuousServo(28, 68);
-	//PositionServoSensor(68);	//Positions: 28, 68, 105 degrees
+	for(uint8_t i=0; i<9; i++)
+	{
+	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
+	PositionServoSensor(POSDOS);	//Positions degrees
 	
 	Read_cts34725();
 	Show_console();
 	
-	ContinuousServo(68, 105);
-	//PositionServoSensor(105);	//Positions: 28, 68, 105 degrees
-
-	//PositionServoSensor(28);	//Positions: 28, 68, 105 degrees
+	HAL_Delay(500);
+	
+	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_RESET);
+	PositionServoSensor(POSTRES);	//Positions degrees
+	HAL_Delay(500);
+	
+	PositionServoSensor(POSUNO);	//Positions degrees
+	HAL_Delay(1000);
+	}
 }
 /*####################### FUNCTIONS FOR SERVOS #############################################################*/
 /*
@@ -193,5 +196,75 @@ void ContinuousServo(uint8_t init, uint8_t finish)
 		HAL_Delay(100);
 	}
 }
+/*##########################################################################################################*/
+/*
+	Define thresholds of colors
+*/
+void StartThreshold(void)
+{
+		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin) && tempStore)
+	{
+		HAL_Delay(5);
+		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin))
+		{
+			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
+			tempBall = false;
+		}
+	}
+	else if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin)==GPIO_PIN_RESET)
+	{
+		HAL_Delay(5);
+		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin)==GPIO_PIN_RESET)
+		{
+			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
+			Store_Colors();
+			count++;
+			tempBall = true;
+		}
+	}
+}
+/*##########################################################################################################*/
+/*
+	Have ball?
+*/
+void ThereIsBall(void)
+{
+		if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin) && tempBall)
+	{
+		HAL_Delay(5);
+		if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin))
+		{
+			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
+			tempBall = false;
+		}
+	}
+	else if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin)==GPIO_PIN_RESET)
+	{
+		HAL_Delay(5);
+		if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin)==GPIO_PIN_RESET)
+		{
+			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
+			CicleColor();
+			tempBall = true;
+		}
+	}
+}
+/*##########################################################################################################*/
+void usDelay(uint32_t uSec)
+{
+	if(uSec < 2) uSec = 2;
+	usTIM->ARR = uSec - 1;		/*Sets the value in the auto-reload register*/
+	usTIM->EGR = 1;						/*Re-initialiser the timer*/
+	usTIM->SR &= ~1;					//Reset the flag
+	usTIM->CR1 |= 1;					//Enables the counter
+	while((usTIM->SR&0x0001) != 1);
+	usTIM->SR &= ~(0x0001);
+}
+/*##########################################################################################################*/
+//void Delay_us(uint16_t us)
+//{
+//	__HAL_TIM_SET_COUNTER(&htim1, 0); //Set the counter value to 0
+//	while(__HAL_TIM_GET_COUNTER(&htim1) < us);	//Wait for the counter to reach the us input in the parameter
+//}
 /*##########################################################################################################*/
 
