@@ -8,12 +8,13 @@
 	   Read the id register (address code: 146 = 0x92) and check if we're communicating 
 		 with the device, the id register value should be 68 = 0x44.
 */
-uint8_t count = 0;
+uint8_t count = 3;
 extern I2C_HandleTypeDef hi2c1;
 extern UART_HandleTypeDef huart2;
 unsigned int Color_Sensor_Address = 0x29<<1;
 uint16_t Clear_value, Red_value, Green_value, Blue_value;
-uint32_t color, Clear_threshold, Red_threshold, Green_threshold, Blue_threshold;
+uint32_t color = 0;
+uint32_t ColorsThreshold[4] = {0, 0, 0, 0};
 
 /*##########################################################################################################*/
 void Test_cts34725(void)
@@ -101,13 +102,14 @@ void Read_cts34725(void)
 */
 void Store_Colors(void)
 {
-	if(count == 0){PositionServo(33);}
-	Read_cts34725();
+	if(count == 0){PositionServoSensor(28);}	
+	CicleColor();
 	char uartComAT[100];
 	
 if(count == 0)
 	{
-		Clear_threshold = color;
+		ColorsThreshold[0] = color;
+		//MY_FLASH_ReadN(0, ColorsThreshold, 4, DATA_TYPE_32);
 		HAL_GPIO_WritePin(RedLed_GPIO_Port, RedLed_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 		count++;
@@ -117,12 +119,13 @@ if(count == 0)
 	
 if(count == 1)
 	{
-		Red_threshold = color;
-		sprintf(uartComAT, "Waiting color Green:\r\n");
-		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+		ColorsThreshold[1] = color;
+		//MY_FLASH_ReadN(0, ColorsThreshold, 4, DATA_TYPE_32);
 		HAL_GPIO_WritePin(RedLed_GPIO_Port, RedLed_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 		count++;
+		sprintf(uartComAT, "Waiting color Green:\r\n");
+		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 	}
 	
 }
@@ -146,10 +149,22 @@ void Show_console(void)
 	sprintf(uartComAT, "T: %d   ", color);
 	HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 	
-	HAL_Delay(2000);
-	
 	sprintf(uartComAT, "\r\n");
 	HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+}
+/*##########################################################################################################*/
+void CicleColor(void)
+{
+	ContinuousServo(28, 68);
+	//PositionServoSensor(68);	//Positions: 28, 68, 105 degrees
+	
+	Read_cts34725();
+	Show_console();
+	
+	ContinuousServo(68, 105);
+	//PositionServoSensor(105);	//Positions: 28, 68, 105 degrees
+
+	//PositionServoSensor(28);	//Positions: 28, 68, 105 degrees
 }
 /*####################### FUNCTIONS FOR SERVOS #############################################################*/
 /*
@@ -165,7 +180,7 @@ Steps for config timer:
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 */
 
-void PositionServo(uint8_t angle)	// 33, 67
+void PositionServoSensor(uint8_t angle)	//Positions: 28, 68, 105 degrees
 {
 	htim3.Instance->CCR1 = angle;
 }
