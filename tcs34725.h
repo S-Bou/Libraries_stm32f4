@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define usTIM TIM4
+#define usTIM TIM5
 #define POSUNO 30
 #define POSDOS 68
 #define POSTRES 105

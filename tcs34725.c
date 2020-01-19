@@ -155,16 +155,16 @@ void CicleColor(void)
 	{
 	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 	PositionServoSensor(POSDOS);	//Positions degrees
-	
+	HAL_Delay(500);
+		
 	Read_cts34725();
 	Show_console();
 	
 	HAL_Delay(500);
-	
-	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_RESET);
 	PositionServoSensor(POSTRES);	//Positions degrees
 	HAL_Delay(500);
-	
+		
+	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_RESET);
 	PositionServoSensor(POSUNO);	//Positions degrees
 	HAL_Delay(1000);
 	}
