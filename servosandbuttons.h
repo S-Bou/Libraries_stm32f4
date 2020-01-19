@@ -12,8 +12,8 @@ extern "C" {
 
 #define usTIM TIM5
 #define POSUNO 23
-#define POSDOS 55
-#define POSTRES 92
+#define POSDOS 60
+#define POSTRES 95
 
 void ThereIsBall(void);
 void PositionServoSensor(uint8_t angle);
