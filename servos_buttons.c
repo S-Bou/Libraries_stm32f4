@@ -1,5 +1,9 @@
 
 #include "servos_buttons.h"
+#include "tcs34725.h"
+
+bool tempStore = true;
+bool tempBall = true;
 
 extern TIM_HandleTypeDef htim3;
 
@@ -17,7 +21,7 @@ Steps for config timer:
 	
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 */
-void PositionServo(uint8_t angle)	
+void PositionServoSensor(uint8_t angle)	
 {
 	htim3.Instance->CCR1 = angle;
 }
@@ -52,7 +56,8 @@ void ThereIsBall(void)
 		if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin)==GPIO_PIN_RESET)
 		{
 			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
-			//Acction
+			//Acction when push the button:
+			CicleColor();
 			tempBall = true;
 		}
 	}

@@ -1,5 +1,6 @@
 
 #include "tcs3200.h"
+#include "servos_buttons.h"
 
 uint8_t red = 0;
 uint8_t blue = 0;
@@ -14,6 +15,26 @@ uint8_t Is_First_Capture = 0;	// Is the first captured?
 
 extern UART_HandleTypeDef huart2;
 
+/*##########################################################################################################*/
+void CicleColor(void)
+{
+	for(uint8_t i=0; i<9; i++)
+	{
+	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_RESET);
+	PositionServoSensor(POSDOS);	//Positions degrees
+	HAL_Delay(500);
+		
+	StoreColor();
+	
+	HAL_Delay(500);
+	PositionServoSensor(POSTRES);	//Positions degrees
+	HAL_Delay(500);
+		
+	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
+	PositionServoSensor(POSUNO);	//Positions degrees
+	HAL_Delay(1000);
+	}
+}
 /*##############################################################################################*/
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
@@ -77,42 +98,42 @@ void StoreColor(void)
 {
 	char uartComAT[100];		
 				
-	HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
-			
-	RegisterColor(RED);
-	sprintf(uartComAT, "Red: %d   ", Difference);
-				red = Difference;
-				HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-				HAL_Delay(TIME);
+	HAL_GPIO_WritePin(BlueLed_GPIO_Port, BlueLed_Pin, GPIO_PIN_SET);
+
+	RegisterColor(CLEAR);
+	sprintf(uartComAT, "C: %d  ", Difference);
+	clear = Difference;
+	HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
+	HAL_Delay(TIME);	
 	
-				RegisterColor(GREEN);
-				sprintf(uartComAT, "Green: %d   ", Difference);
-				green = Difference;
-				HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-				HAL_Delay(TIME);
+	RegisterColor(RED);
+	sprintf(uartComAT, "R: %d   ", Difference);
+	red = Difference;
+	HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
+	HAL_Delay(TIME);
+	
+	RegisterColor(GREEN);
+	sprintf(uartComAT, "G: %d   ", Difference);
+	green = Difference;
+	HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
+	HAL_Delay(TIME);
 		
-				RegisterColor(BLUE);
-				sprintf(uartComAT, "Blue: %d   ", Difference);
-				blue = Difference;
-				HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-				HAL_Delay(TIME);
-		
-				RegisterColor(CLEAR);
-				sprintf(uartComAT, "Clear: %d  ", Difference);
-				clear = Difference;
-				HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-				HAL_Delay(TIME);
+	RegisterColor(BLUE);
+	sprintf(uartComAT, "B: %d   ", Difference);
+	blue = Difference;
+	HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
+	HAL_Delay(TIME);
 			
-				color = red*65536 + green*256 + blue;
-				sprintf(uartComAT, "Color: %d", color);
-				HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-				HAL_Delay(TIME);
+	color = red*65536 + green*256 + blue;
+	sprintf(uartComAT, "T: %d", color);
+	HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
+	HAL_Delay(TIME);
 				
-				sprintf(uartComAT, "\r\n");
-				HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-				HAL_Delay(TIME);
+	sprintf(uartComAT, "\r\n");
+	HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
+	HAL_Delay(TIME);
 				
-				HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 }
 /*##############################################################################################*/
 void CalculeColor(void)
@@ -191,8 +212,5 @@ l*=100.0; // [%]
 //				HAL_Delay(TIME);
 			
 }
-
 /*##############################################################################################*/
-
-
 		

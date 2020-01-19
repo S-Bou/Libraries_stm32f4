@@ -19,6 +19,7 @@ extern "C" {
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim);
 void RegisterColor(int color);
+void CicleColor(void);
 void StoreColor(void);
 void CalculeColor(void);
 
