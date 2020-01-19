@@ -8,8 +8,7 @@
 
 #include "main.h"
 #include "stm32f4xx_hal.h"
-#include "writeFlash.h"
-#include <stdbool.h>
+#include "servosandbuttons.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>

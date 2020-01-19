@@ -1,7 +1,8 @@
 
-#include "servos_buttons.h"
+#include "servosandbuttons.h"
 #include "tcs34725.h"
 
+uint8_t count = 0;
 bool tempStore = true;
 bool tempBall = true;
 
@@ -58,6 +59,33 @@ void ThereIsBall(void)
 			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 			//Acction when push the button:
 			CicleColor();
+			tempBall = true;
+		}
+	}
+}
+/*##########################################################################################################*/
+/*
+	Define thresholds of colors
+*/
+void StartThreshold(void)
+{
+		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin) && tempStore)
+	{
+		HAL_Delay(5);
+		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin))
+		{
+			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
+			tempBall = false;
+		}
+	}
+	else if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin)==GPIO_PIN_RESET)
+	{
+		HAL_Delay(5);
+		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin)==GPIO_PIN_RESET)
+		{
+			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
+			Store_Colors();
+			count++;
 			tempBall = true;
 		}
 	}

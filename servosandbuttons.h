@@ -1,6 +1,6 @@
 
-#ifndef __SERVOS_BUTTONS_H
-#define __SERVOS_BUTTONS_H
+#ifndef __SERVOSANDBUTTONS_H
+#define __SERVOSANDBUTTONS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,5 +23,5 @@ void ContinuousServo(uint8_t init, uint8_t finish);
 }
 #endif
 
-#endif /* __SERVOS_BUTTONS_H */
+#endif /* __SERVOSANDBUTTONS_H */
 

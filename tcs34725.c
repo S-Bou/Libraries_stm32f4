@@ -1,6 +1,6 @@
 /*##########################################################################################################*/
 #include "tcs34725.h"
-#include "servos_buttons.h"
+
 /*
 	The slave address of the color sensor is 41 = 0x29.
 	
@@ -8,9 +8,7 @@
 	   Read the id register (address code: 146 = 0x92) and check if we're communicating 
 		 with the device, the id register value should be 68 = 0x44.
 */
-uint8_t count = 0;
-bool tempStore = true;
-bool tempBall = true;
+
 extern I2C_HandleTypeDef hi2c1;
 extern UART_HandleTypeDef huart2;
 unsigned int Color_Sensor_Address = 0x29<<1;
@@ -104,26 +102,26 @@ void Read_cts34725(void)
 */
 void Store_Colors(void)
 {
-	if(count == 0){PositionServoSensor(POSUNO);}	
-	char uartComAT[100];
-	
-	if(count == 0)
-		{
-			ColorsThreshold[0] = color;
-			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
-			sprintf(uartComAT, "Init process for store value of colors.\nWaiting color Red:\r\n");
-			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-		}
-	
-	if(count == 1)
-		{
-			ColorsThreshold[1] = color;
-			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
-			sprintf(uartComAT, "Waiting color Green:\r\n");
-			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-		}
-	
-	if(count == 2){count = 0;}
+//	if(count == 0){PositionServoSensor(POSUNO);}	
+//	char uartComAT[100];
+//	
+//	if(count == 0)
+//		{
+//			ColorsThreshold[0] = color;
+//			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
+//			sprintf(uartComAT, "Init process for store value of colors.\nWaiting color Red:\r\n");
+//			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+//		}
+//	
+//	if(count == 1)
+//		{
+//			ColorsThreshold[1] = color;
+//			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
+//			sprintf(uartComAT, "Waiting color Green:\r\n");
+//			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+//		}
+//	
+//	if(count == 2){count = 0;}
 	
 }
 /*##########################################################################################################*/
@@ -172,31 +170,4 @@ void CicleColor(void)
 }
 
 /*##########################################################################################################*/
-/*
-	Define thresholds of colors
-*/
-void StartThreshold(void)
-{
-		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin) && tempStore)
-	{
-		HAL_Delay(5);
-		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin))
-		{
-			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
-			tempBall = false;
-		}
-	}
-	else if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin)==GPIO_PIN_RESET)
-	{
-		HAL_Delay(5);
-		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin)==GPIO_PIN_RESET)
-		{
-			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
-			Store_Colors();
-			count++;
-			tempBall = true;
-		}
-	}
-}
 
-/*##########################################################################################################*/
