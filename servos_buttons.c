@@ -6,12 +6,13 @@
 /*
 Steps for config timer:
 	- Select timer and chanel, in this case TIM3 Channel 1.
-	- Select in channel PWM Generation CH1.
-	- Need pulses for 20 ms frecuncy 50 Hz, to do this config prescaler (PSC - 15 bits value) and ARR.
-	  In this case in clock configuration i have in APB1 Timer clocks 72 MHz.
-	  72 MHz / 50 Hz = 1 440 000 -> Preescaler = 1440-1 and ARR = 1000.
-	
-	Init declaring function that start PWM, in this case with timer 3 (chanel 1):
+	- Select in channel PWM Generation CH1 ->X (This establishes pin PA6 as output).
+	- Need pulses for 20 ms frecuency 50 Hz, to do this configure the below parameters:
+          In this case in clock configuration I have in APB1 Timer clocks 72 MHz.
+          72 MHz / 50 Hz = 1 440 000 -> Preescaler = 1440-1 and ARR = 1000-1.
+          Prescaler (PSC - 16 bits value) = 14440-1 
+          Counter Period (ARR)            = 1000-1
+	- Remember declaring function that start PWM in main file, in this case: timer 3, chanel 1:
 	
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 */
@@ -31,7 +32,7 @@ void ContinuousServo(uint8_t init, uint8_t finish)
 /*########## FUNCTIONS FOR BUTTONS ##############################################################*/
 /*	
 	This function reduces the posibility for the button do multiple signals.
-	In this proyect I establised the pin PE0 with the user name "ButtonCicle"
+	In this proyect I establishes the pin PE0 with the user name "ButtonCicle"
 */
 void ThereIsBall(void)
 {
