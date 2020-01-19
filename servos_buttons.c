@@ -32,7 +32,7 @@ void ContinuousServo(uint8_t init, uint8_t finish)
 /*########## FUNCTIONS FOR BUTTONS ##############################################################*/
 /*	
 	This function reduces the posibility for the button do multiple signals.
-	In this proyect I establishes the pin PE0 with the user name "ButtonCicle"
+	In this proyect I establishes the pin PE0 as input (Pull-Up), with the user name "ButtonCicle"
 */
 void ThereIsBall(void)
 {
