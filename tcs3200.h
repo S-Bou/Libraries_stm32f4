@@ -2,6 +2,10 @@
 #ifndef __TCS3200_H
 #define __TCS3200_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "main.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -18,5 +22,10 @@ void RegisterColor(int color);
 void StoreColor(void);
 void CalculeColor(void);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* __TCS3200_H */
+
 

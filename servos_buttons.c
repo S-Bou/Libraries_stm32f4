@@ -1,6 +1,7 @@
 
 #include "servos_buttons.h"
 
+extern TIM_HandleTypeDef htim3;
 
 /*########## FUNCTIONS FOR SERVOS ###############################################################*/
 /*
@@ -10,7 +11,7 @@ Steps for config timer:
 	- Need pulses for 20 ms frecuency 50 Hz, to do this configure the below parameters:
           In this case in clock configuration I have in APB1 Timer clocks 72 MHz.
           72 MHz / 50 Hz = 1 440 000 -> Preescaler = 1440-1 and ARR = 1000-1.
-          Prescaler (PSC - 16 bits value) = 14440-1 
+          Prescaler (PSC - 16 bits value) = 1440-1 
           Counter Period (ARR)            = 1000-1
 	- Remember declaring function that start PWM in main file, in this case: timer 3, chanel 1:
 	
