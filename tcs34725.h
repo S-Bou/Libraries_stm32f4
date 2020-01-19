@@ -15,9 +15,9 @@
 #include <string.h>
 
 #define usTIM TIM5
-#define POSUNO 30
-#define POSDOS 68
-#define POSTRES 105
+#define POSUNO 23
+#define POSDOS 55
+#define POSTRES 92
 extern TIM_HandleTypeDef htim3;
 
 void PositionServoSensor(uint8_t angle);

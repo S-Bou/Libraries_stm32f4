@@ -4,6 +4,12 @@
 
 #include "main.h"
 #include <stdint.h>
+#include <stdbool.h>
+
+#define usTIM TIM5
+
+bool tempStore = true;
+bool tempBall = true;
 
 extern TIM_HandleTypeDef htim3;
 
