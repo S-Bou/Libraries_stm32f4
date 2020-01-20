@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 
+//#define UMBRAL 20
+
 extern TIM_HandleTypeDef htim3;
 
 void Test_cts34725(void);
@@ -22,7 +24,9 @@ void Store_Colors(void);
 void Show_console(void);
 void CicleColor(void);
 void StartThreshold(void);
-
+void mapData(void);
+void CalibrateColour(void);
+void DefineColour(uint32_t colour);
 
 #ifdef __cplusplus
 }

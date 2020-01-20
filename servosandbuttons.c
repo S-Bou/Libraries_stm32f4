@@ -5,7 +5,7 @@
 uint8_t count = 0;
 bool tempStore = true;
 bool tempBall = true;
-
+uint8_t buttoncalibrate = 0;
 extern TIM_HandleTypeDef htim3;
 
 /*########## FUNCTIONS FOR SERVOS ###############################################################*/
@@ -27,6 +27,11 @@ void PositionServoSensor(uint8_t angle)
 	htim3.Instance->CCR1 = angle;
 }
 
+void PositionServoRamp(uint8_t angle)	
+{
+	htim3.Instance->CCR2 = angle;
+}
+
 void ContinuousServo(uint8_t init, uint8_t finish)
 {
 	for(uint8_t i=init; i<finish; i++)
@@ -38,23 +43,23 @@ void ContinuousServo(uint8_t init, uint8_t finish)
 /*########## FUNCTIONS FOR BUTTONS ##############################################################*/
 /*	
 	This function reduces the posibility for the button do multiple signals.
-	In this proyect I establishes the pin PE0 as input (Pull-Up), with the user name "ButtonCicle"
+	In this proyect I establishes the pin PE0 as input (Pull-Up), with the user name "ButtonOne"
 */
-void ThereIsBall(void)
+void ButtonOnePressed(void)
 {
-		if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin) && tempBall)
+		if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin) && tempBall)
 	{
 		HAL_Delay(5);
-		if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin))
+		if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin))
 		{
 			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 			tempBall = false;
 		}
 	}
-	else if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin)==GPIO_PIN_RESET)
+	else if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin)==GPIO_PIN_RESET)
 	{
 		HAL_Delay(5);
-		if(HAL_GPIO_ReadPin(ButtonCicle_GPIO_Port, ButtonCicle_Pin)==GPIO_PIN_RESET)
+		if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin)==GPIO_PIN_RESET)
 		{
 			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 			//Acction when push the button:
@@ -65,27 +70,28 @@ void ThereIsBall(void)
 }
 /*##########################################################################################################*/
 /*
-	Define thresholds of colors
+	This function reduces the posibility for the button do multiple signals.
+	In this proyect I establishes the pin PC13 as input (Pull-Up), with the user name "ButtonTwo"
 */
-void StartThreshold(void)
+void ButtonTwoPressed(void)
 {
-		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin) && tempStore)
+		if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin) && tempStore)
 	{
-		HAL_Delay(5);
-		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin))
+		HAL_Delay(50);
+		if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin))
 		{
 			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 			tempBall = false;
 		}
 	}
-	else if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin)==GPIO_PIN_RESET)
+	else if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin)==GPIO_PIN_RESET)
 	{
-		HAL_Delay(5);
-		if(HAL_GPIO_ReadPin(StoreColors_GPIO_Port, StoreColors_Pin)==GPIO_PIN_RESET)
+		HAL_Delay(50);
+		if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin)==GPIO_PIN_RESET)
 		{
 			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
-			Store_Colors();
-			count++;
+		  //Acction when push the button:
+			CalibrateColour();
 			tempBall = true;
 		}
 	}

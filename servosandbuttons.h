@@ -11,12 +11,20 @@ extern "C" {
 #include <stdbool.h>
 
 #define usTIM TIM5
-#define POSUNO 23
+#define POSUNO 24
 #define POSDOS 60
 #define POSTRES 95
 
-void ThereIsBall(void);
+#define SRROJO 100
+#define SRVERDE 85
+#define SRAZUL 70
+#define SRMORADO 55
+#define SRNARANJA 45
+
+void ButtonOnePressed(void);
+void ButtonTwoPressed(void);
 void PositionServoSensor(uint8_t angle);
+void PositionServoRamp(uint8_t angle);
 void ContinuousServo(uint8_t init, uint8_t finish);
 
 #ifdef __cplusplus
