@@ -7,15 +7,15 @@
 #endif
 
 #include "main.h"
+#include "ssd1306.h"
+#include "test.h"
 #include "stm32f4xx_hal.h"
 #include "servosandbuttons.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
-//#define UMBRAL 20
-
-extern TIM_HandleTypeDef htim3;
+#define UMBRAL 150
 
 void Test_cts34725(void);
 void Init_cts34725(void);

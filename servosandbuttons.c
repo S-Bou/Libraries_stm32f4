@@ -2,11 +2,24 @@
 #include "servosandbuttons.h"
 #include "tcs34725.h"
 
+/*##########################################################################################################*/
+/*
+	CONECTIONS
+	----------
+	- Servo sensor of colours: -> PA6 TIM3_CH1
+	- Servo ramp: --------------> PA7 TIM3_CH2
+	- Button 1: ----------------> PE0 GPIO_Input with Pull-up
+	- Button 2: ----------------> PE5 GPIO_Input with Pull-up
+*/
+/*##########################################################################################################*/
+
 uint8_t count = 0;
 bool tempStore = true;
 bool tempBall = true;
 uint8_t buttoncalibrate = 0;
+uint8_t buttontwopulsed = 0;
 extern TIM_HandleTypeDef htim3;
+extern uint8_t rojo, verde, azul, morado, total;
 
 /*########## FUNCTIONS FOR SERVOS ###############################################################*/
 /*
@@ -63,7 +76,7 @@ void ButtonOnePressed(void)
 		{
 			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 			//Acction when push the button:
-			CicleColor();
+			ButtonTwoAction();
 			tempBall = true;
 		}
 	}
@@ -91,10 +104,137 @@ void ButtonTwoPressed(void)
 		{
 			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 		  //Acction when push the button:
-			CalibrateColour();
+			ButtonTwoMenu();
+			if(buttoncalibrate == 1){CalibrateColour();}
 			tempBall = true;
 		}
 	}
+}
+/*##########################################################################################################*/
+/*
+	This function reduces the posibility for the button do multiple signals.
+	In this proyect I establishes the pin PC13 as input (Pull-Up), with the user name "ButtonTwo"
+*/
+void ButtonTwoAction(void)
+{
+	if(buttontwopulsed == 1)
+	{
+		SSD1306_Clear();
+		CicleColor();
+	}
+	if(buttontwopulsed == 2)
+	{
+		SSD1306_Clear();
+		CalibrateColour();
+	}
+	if(buttontwopulsed == 3)
+	{
+		SSD1306_Clear();
+		rojo=0; verde=0; azul=0; morado=0; total=0;
+		
+	}
+	if(buttontwopulsed == 4)
+	{
+		SSD1306_Clear();
+		
+	}
+}
+/*##########################################################################################################*/
+/*
+	Show menu in screen oled.
+	In this proyect I establishes the pin PC13 as input (Pull-Up), with the user name "ButtonTwo"
+*/
+void ButtonTwoMenu(void)
+{
+	buttontwopulsed++;
+	char uartComAT[100];
+	
+	if(buttontwopulsed == 1)
+	{
+		SSD1306_Clear();
+		SSD1306_GotoXY (14,2);                    
+		sprintf(uartComAT, "Menu:");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		SSD1306_GotoXY (14, 16);                 
+		sprintf(uartComAT, "1. Sorter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 28);               
+		sprintf(uartComAT, "2. Calibration");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 41);                
+		sprintf(uartComAT, "3. Reset counter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 53);                
+		sprintf(uartComAT, "4. Send to web");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);
+		SSD1306_DrawFilledCircle(5, 19, 4, 1);
+		SSD1306_UpdateScreen(); 
+	}
+	else if(buttontwopulsed == 2)
+	{
+		SSD1306_Clear();
+		SSD1306_GotoXY (14,2);                    
+		sprintf(uartComAT, "Menu:");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		SSD1306_GotoXY (14, 16);                 
+		sprintf(uartComAT, "1. Sorter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 28);               
+		sprintf(uartComAT, "2. Calibration");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 41);                
+		sprintf(uartComAT, "3. Reset counter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 53);                
+		sprintf(uartComAT, "4. Send to web");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		SSD1306_DrawFilledCircle(5, 31, 4, 1);
+		SSD1306_UpdateScreen(); 
+	}
+	else if(buttontwopulsed == 3)
+	{
+		SSD1306_Clear();
+		SSD1306_GotoXY (14,2);                    
+		sprintf(uartComAT, "Menu:");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		SSD1306_GotoXY (14, 16);                 
+		sprintf(uartComAT, "1. Sorter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 28);               
+		sprintf(uartComAT, "2. Calibration");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 41);                
+		sprintf(uartComAT, "3. Reset counter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 53);                
+		sprintf(uartComAT, "4. Send to web");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		SSD1306_DrawFilledCircle(5, 43, 4, 1);
+		SSD1306_UpdateScreen(); 
+	}
+	else if(buttontwopulsed == 4)
+	{
+		SSD1306_Clear();
+		SSD1306_GotoXY (14,2);                    
+		sprintf(uartComAT, "Menu:");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		SSD1306_GotoXY (14, 16);                 
+		sprintf(uartComAT, "1. Sorter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 28);               
+		sprintf(uartComAT, "2. Calibration");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 41);                
+		sprintf(uartComAT, "3. Reset counter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (14, 53);                
+		sprintf(uartComAT, "4. Send to web");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		SSD1306_DrawFilledCircle(5, 56, 4, 1);
+		SSD1306_UpdateScreen(); 
+	}
+	
+	if(buttontwopulsed == 5){buttontwopulsed = 0;}
 }
 /*########## FUNCTIONS FOR usDELAYS #############################################################*/
 //void usDelay(uint32_t uSec)

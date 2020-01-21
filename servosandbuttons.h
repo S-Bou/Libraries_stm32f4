@@ -11,7 +11,6 @@ extern "C" {
 #include <stdbool.h>
 
 #define usTIM TIM5
-#define UMBRAL 100
 
 //Servo Sensor
 #define POSUNO 24
@@ -31,6 +30,8 @@ void ButtonTwoPressed(void);
 void PositionServoSensor(uint8_t angle);
 void PositionServoRamp(uint8_t angle);
 void ContinuousServo(uint8_t init, uint8_t finish);
+void ButtonTwoMenu(void);
+void ButtonTwoAction(void);
 
 #ifdef __cplusplus
 }
