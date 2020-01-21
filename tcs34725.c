@@ -16,7 +16,7 @@ unsigned int Color_Sensor_Address = 0x29<<1;
 uint8_t takingsamples = 0;
 uint16_t Clear_value, Red_value, Green_value, Blue_value;
 uint32_t color = 0;
-uint32_t ColorsThreshold[5] = {0, 0, 0, 0, 0};
+uint32_t ColorsThreshold[4] = {0, 0, 0, 0};
 
 /*##########################################################################################################*/
 void Test_cts34725(void)
@@ -163,7 +163,7 @@ void Show_console(void)
 /*##########################################################################################################*/
 void CicleColor(void)
 {
-	for(uint8_t i=0; i<15; i++)
+	for(uint8_t i=0; i<13; i++)
 	{
 	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 	PositionServoSensor(POSDOS);	//Positions degrees
@@ -197,17 +197,17 @@ void CalibrateColour(void)
 	char uartComAT[100];
 	if(buttoncalibrate == 0)
 	{
-		sprintf(uartComAT, "Put balls in this order: Rojo, Verde, Azul, Morado y Naranja.\r\n"
+		sprintf(uartComAT, "Put balls in this order: Red, Green, Blue and Purple.\r\n"
 		                   "And press button 2 ...\r\n");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 		buttoncalibrate = 1;
 	}else
 	{
-		sprintf(uartComAT, "Guardando muestras de color...\r\n");
+		sprintf(uartComAT, "Saving color samples...\r\n");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 
 		
-		for(uint8_t i=0; i<5; i++)
+		for(uint8_t i=0; i<4; i++)
 		{
 			HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 			PositionServoSensor(POSDOS);	//Positions degrees
@@ -228,7 +228,7 @@ void CalibrateColour(void)
 			}
 		
 		buttoncalibrate = 0;
-		sprintf(uartComAT, "Ha finalizado el muestreo de colores.\r\n");
+		sprintf(uartComAT, "Color sampling is finished.\r\n");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
 	}	
 }
@@ -236,41 +236,42 @@ void CalibrateColour(void)
 void DefineColour(uint32_t colour)
 {	
 	char uartComAT[100];
-	uint32_t UMBRAL = ColorsThreshold[0] - ColorsThreshold[4];
+//	uint32_t UMBRAL = ColorsThreshold[1] - ColorsThreshold[2];
 	
 	if( colour <= (ColorsThreshold[0]+UMBRAL) && colour >= (ColorsThreshold[0]-UMBRAL))
 	{
 		PositionServoRamp(SRROJO);
-		sprintf(uartComAT, "= Rojo");
+		sprintf(uartComAT, "= Red");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 	}
 	else if( colour <= (ColorsThreshold[1]+UMBRAL) && colour >= (ColorsThreshold[1]-UMBRAL))
 	{
 		PositionServoRamp(SRVERDE);
-		sprintf(uartComAT, "= Verde");
+		sprintf(uartComAT, "= Green");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 	}
 	else if( colour <= (ColorsThreshold[2]+UMBRAL) && colour >= (ColorsThreshold[2]-UMBRAL))
 	{
 		PositionServoRamp(SRAZUL);
-		sprintf(uartComAT, "= Azul");
+		sprintf(uartComAT, "= Blue");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 	}
 	else if( colour <= (ColorsThreshold[3]+UMBRAL) && colour >= (ColorsThreshold[3]-UMBRAL))
 	{
 		PositionServoRamp(SRMORADO);
-		sprintf(uartComAT, "= Morado");
+		sprintf(uartComAT, "= Purple");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 	}
-	else if( colour <= (ColorsThreshold[4]+UMBRAL) && colour >= (ColorsThreshold[4]-UMBRAL))
-	{
-		PositionServoRamp(SRNARANJA);
-		sprintf(uartComAT, "= Naranja");
-		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-	}
+//	else if( colour <= (ColorsThreshold[4]+UMBRAL) && colour >= (ColorsThreshold[4]-UMBRAL))
+//	{
+//		PositionServoRamp(SRNARANJA);
+//		sprintf(uartComAT, "= Orange");
+//		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+//	}
 	else
 	{
-		sprintf(uartComAT, " Indeterminado");
+		PositionServoRamp(SRINDETERMINADO);
+		sprintf(uartComAT, " Indeterminate");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 	}
 }
