@@ -12,9 +12,9 @@
 		3v3 -> 3.3V or VIN -> 5v
 		GND -> GND
 		
-	- FTDI232 for serial comunication -> USART2:
-		RX -> PA2 USART2_TX
-		TX -> PA3 USART2_RX
+	- FTDI232 for serial comunication -> USART1:
+		RX -> PA10 USART1_TX
+		TX -> PA9  USART1_RX
 */
 /*##########################################################################################################*/
 /*
@@ -77,6 +77,9 @@ void Init_cts34725(void)
 	//3) Write the Enable Register (address code: 128 = 0x80) to 3 -> enables the ADC and turns the device on.
 	unsigned char Enable_register[2] = {0x80, 0x03};
 	HAL_I2C_Master_Transmit(&hi2c2, Color_Sensor_Address, Enable_register, 2, 100);
+	
+	//4) Reset variables for count balls
+	rojo=0; verde=0; azul=0; morado=0; total=0;	
 }
 /*##########################################################################################################*/
 /*
@@ -125,28 +128,12 @@ void Read_cts34725(void)
 	And it show on the console.
 */
 void Store_Colors(void)
-{
-	if(count == 0){PositionServoSensor(POSUNO);}	
+{	
 	char uartComAT[100];
-	
-	if(count == 0)
-		{
-			ColorsThreshold[0] = color;
-			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
-			sprintf(uartComAT, "Init process for store value of colors.\nWaiting color Red:\r\n");
-			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-		}
-	
-	if(count == 1)
-		{
-			ColorsThreshold[1] = color;
-			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
-			sprintf(uartComAT, "Waiting color Green:\r\n");
-			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-		}
-	
-	if(count == 2){count = 0;}
-	
+
+		MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
+		sprintf(uartComAT, "Colors stored in memory flash.\r\n");
+		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 }
 /*##########################################################################################################*/
 void Show_console(void)
@@ -204,16 +191,6 @@ void CicleColor(void)
 	}
 }
 /*##########################################################################################################*/
-void mapData(void)
-{	
-//	
-//	Red = ((double)Red_value/(double)Clear_value)*256.0;
-//	Green = ((double)Green_value/(double)Clear_value)*256.0;
-//	Blue = ((double)Blue_value/(double)Clear_value)*256.0;
-//	
-//	color = Red*65536 + Green*256 + Blue;
-}
-/*##########################################################################################################*/
 void CalibrateColour(void)
 {	
 	char uartComAT[100];
@@ -251,7 +228,6 @@ void CalibrateColour(void)
 			Read_cts34725();
 			HAL_Delay(1000);
 			Show_console();
-			Store_Colors();
 	
 			ColorsThreshold[count] = color;
 	
@@ -285,6 +261,7 @@ void CalibrateColour(void)
 		sprintf(uartComAT, "Purple = %d", color);
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
 		SSD1306_UpdateScreen(); 
+		Store_Colors();
 	}
 			
 			PositionServoSensor(POSTRES);	//Positions degrees
@@ -304,7 +281,6 @@ void CalibrateColour(void)
 void DefineColour(uint32_t colour)
 {	
 	char uartComAT[100];
-//	uint32_t UMBRAL = ColorsThreshold[1] - ColorsThreshold[2];
 	
 	if( colour <= (ColorsThreshold[0]+UMBRAL) && colour >= (ColorsThreshold[0]-UMBRAL))
 	{
@@ -334,12 +310,6 @@ void DefineColour(uint32_t colour)
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 		morado++;
 	}
-//	else if( colour <= (ColorsThreshold[4]+UMBRAL) && colour >= (ColorsThreshold[4]-UMBRAL))
-//	{
-//		PositionServoRamp(SRNARANJA);
-//		sprintf(uartComAT, "= Orange");
-//		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-//	}
 	else
 	{
 		PositionServoRamp(SRINDETERMINADO);

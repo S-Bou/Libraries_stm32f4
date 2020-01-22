@@ -13,7 +13,6 @@
 */
 /*##########################################################################################################*/
 
-uint8_t count = 0;
 bool tempStore = true;
 bool tempBall = true;
 uint8_t buttoncalibrate = 0;
@@ -117,26 +116,27 @@ void ButtonTwoPressed(void)
 */
 void ButtonTwoAction(void)
 {
-	if(buttontwopulsed == 1)
+	if(buttontwopulsed == 1)	//Select in menu sorter
 	{
 		SSD1306_Clear();
 		CicleColor();
 	}
-	if(buttontwopulsed == 2)
+	if(buttontwopulsed == 2)	//Select in menu calibration
 	{
 		SSD1306_Clear();
 		CalibrateColour();
 	}
-	if(buttontwopulsed == 3)
+	if(buttontwopulsed == 3)	//Select in menu reset counter
 	{
 		SSD1306_Clear();
 		rojo=0; verde=0; azul=0; morado=0; total=0;
 		
 	}
-	if(buttontwopulsed == 4)
+	if(buttontwopulsed == 4)	//Select in menu send to web
 	{
 		SSD1306_Clear();
 		
+		UpPage();
 	}
 }
 /*##########################################################################################################*/

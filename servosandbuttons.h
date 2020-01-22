@@ -8,6 +8,7 @@ extern "C" {
 
 #include "main.h"
 #include "ssd1306.h"
+#include "sendwifi.h"
 #include <stdint.h>
 #include <stdbool.h>
 
