@@ -7,6 +7,7 @@ extern "C" {
 #endif
 
 #include "main.h"
+#include "ssd1306.h"
 #include <stdint.h>
 #include <stdbool.h>
 

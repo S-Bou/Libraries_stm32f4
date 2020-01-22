@@ -34,7 +34,8 @@ unsigned int Color_Sensor_Address = 0x29<<1;
 
 uint8_t ciclecolor = 0;
 uint8_t takingsamples = 0;
-uint8_t rojo=0, verde=0, azul=0, morado=0, total=0;
+uint8_t count = 0;
+uint8_t	rojo=0, verde=0, azul=0, morado=0, total=0;
 uint16_t Clear_value, Red_value, Green_value, Blue_value;
 uint32_t color = 0;
 uint32_t ColorsThreshold[4] = {0, 0, 0, 0};
@@ -125,26 +126,26 @@ void Read_cts34725(void)
 */
 void Store_Colors(void)
 {
-//	if(count == 0){PositionServoSensor(POSUNO);}	
-//	char uartComAT[100];
-//	
-//	if(count == 0)
-//		{
-//			ColorsThreshold[0] = color;
-//			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
-//			sprintf(uartComAT, "Init process for store value of colors.\nWaiting color Red:\r\n");
-//			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-//		}
-//	
-//	if(count == 1)
-//		{
-//			ColorsThreshold[1] = color;
-//			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
-//			sprintf(uartComAT, "Waiting color Green:\r\n");
-//			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
-//		}
-//	
-//	if(count == 2){count = 0;}
+	if(count == 0){PositionServoSensor(POSUNO);}	
+	char uartComAT[100];
+	
+	if(count == 0)
+		{
+			ColorsThreshold[0] = color;
+			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
+			sprintf(uartComAT, "Init process for store value of colors.\nWaiting color Red:\r\n");
+			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+		}
+	
+	if(count == 1)
+		{
+			ColorsThreshold[1] = color;
+			MY_FLASH_WriteN(0, ColorsThreshold, 4, DATA_TYPE_32);
+			sprintf(uartComAT, "Waiting color Green:\r\n");
+			HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
+		}
+	
+	if(count == 2){count = 0;}
 	
 }
 /*##########################################################################################################*/
@@ -241,7 +242,7 @@ void CalibrateColour(void)
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 
 		
-		for(uint8_t i=0; i<4; i++)
+		for(count=0; count<4; count++)
 		{
 			HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 			PositionServoSensor(POSDOS);	//Positions degrees
@@ -250,8 +251,41 @@ void CalibrateColour(void)
 			Read_cts34725();
 			HAL_Delay(1000);
 			Show_console();
+			Store_Colors();
 	
-			ColorsThreshold[i] = color;
+			ColorsThreshold[count] = color;
+	
+	if(count == 0)
+	{
+		SSD1306_Clear();
+		SSD1306_GotoXY (14,2);                    
+		SSD1306_Puts ("Calibrating...", &Font_7x10, 1);  
+		SSD1306_GotoXY (14, 16);                 
+		sprintf(uartComAT, "Red    = %d", color);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_UpdateScreen(); 
+	}
+	else if(count == 1)
+	{  
+		SSD1306_GotoXY (14, 28);               
+		sprintf(uartComAT, "Green  = %d", color);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_UpdateScreen(); 
+	}
+	else if(count == 2)
+	{   
+		SSD1306_GotoXY (14, 41);                
+		sprintf(uartComAT, "Blue   = %d", color);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_UpdateScreen(); 
+	}
+	else if(count == 3)
+	{  
+		SSD1306_GotoXY (14, 53);                
+		sprintf(uartComAT, "Purple = %d", color);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		SSD1306_UpdateScreen(); 
+	}
 			
 			PositionServoSensor(POSTRES);	//Positions degrees
 			HAL_Delay(500);
@@ -270,7 +304,6 @@ void CalibrateColour(void)
 void DefineColour(uint32_t colour)
 {	
 	char uartComAT[100];
-	rojo=0; verde=0; azul=0; morado=0; total=0;
 //	uint32_t UMBRAL = ColorsThreshold[1] - ColorsThreshold[2];
 	
 	if( colour <= (ColorsThreshold[0]+UMBRAL) && colour >= (ColorsThreshold[0]-UMBRAL))

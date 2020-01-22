@@ -7,6 +7,7 @@
 #endif
 
 #include "main.h"
+#include "writeFlash.h"
 #include "ssd1306.h"
 #include "test.h"
 #include "stm32f4xx_hal.h"
