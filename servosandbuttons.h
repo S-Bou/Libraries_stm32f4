@@ -20,7 +20,7 @@ extern "C" {
 #define POSTRES 95
 
 //Servo Rampa
-#define SRROJO 95
+#define SRROJO 93
 #define SRVERDE 80
 #define SRAZUL 70
 #define SRMORADO 60

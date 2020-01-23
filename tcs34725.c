@@ -32,9 +32,6 @@ extern uint8_t buttoncalibrate;
 
 unsigned int Color_Sensor_Address = 0x29<<1;
 
-uint8_t ciclecolor = 0;
-uint8_t takingsamples = 0;
-uint8_t count = 0;
 uint8_t	rojo=0, verde=0, azul=0, morado=0, total=0;
 uint16_t Clear_value, Red_value, Green_value, Blue_value;
 uint32_t color = 0;
@@ -172,7 +169,7 @@ void Show_console(void)
 /*##########################################################################################################*/
 void CicleColor(void)
 {
-	for(uint8_t i=0; i<12; i++)
+	for(uint8_t i=0; i<4; i++)
 	{
 	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 	PositionServoSensor(POSDOS);	//Positions degrees
@@ -218,8 +215,9 @@ void CalibrateColour(void)
 		sprintf(uartComAT, "Saving color samples...\r\n");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);	
 
+		uint8_t counter = 0;
 		
-		for(count=0; count<4; count++)
+		for(counter=0; counter<4; counter++)
 		{
 			HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 			PositionServoSensor(POSDOS);	//Positions degrees
@@ -229,9 +227,9 @@ void CalibrateColour(void)
 			HAL_Delay(1000);
 			Show_console();
 	
-			ColorsThreshold[count] = color;
+			ColorsThreshold[counter] = color;
 	
-	if(count == 0)
+	if(counter == 0)
 	{
 		SSD1306_Clear();
 		SSD1306_GotoXY (14,2);                    
@@ -241,21 +239,21 @@ void CalibrateColour(void)
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_UpdateScreen(); 
 	}
-	else if(count == 1)
+	else if(counter == 1)
 	{  
 		SSD1306_GotoXY (14, 28);               
 		sprintf(uartComAT, "Green  = %d", color);
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_UpdateScreen(); 
 	}
-	else if(count == 2)
+	else if(counter == 2)
 	{   
 		SSD1306_GotoXY (14, 41);                
 		sprintf(uartComAT, "Blue   = %d", color);
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_UpdateScreen(); 
 	}
-	else if(count == 3)
+	else if(counter == 3)
 	{  
 		SSD1306_GotoXY (14, 53);                
 		sprintf(uartComAT, "Purple = %d", color);

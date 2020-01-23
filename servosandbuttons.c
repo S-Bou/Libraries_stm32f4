@@ -128,14 +128,58 @@ void ButtonTwoAction(void)
 	}
 	if(buttontwopulsed == 3)	//Select in menu reset counter
 	{
-		SSD1306_Clear();
 		rojo=0; verde=0; azul=0; morado=0; total=0;
+		char uartComAT[100];
+		SSD1306_Clear();
+		SSD1306_GotoXY (10,10);                     
+		sprintf(uartComAT, "Red:    %d", rojo);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,20);                 
+		sprintf(uartComAT, "Green:  %d", verde);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,30);               
+		sprintf(uartComAT, "Blue:   %d", azul);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,40);                
+		sprintf(uartComAT, "Purple: %d", morado);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,50);  
+		total = rojo+verde+azul+morado;
+		sprintf(uartComAT, "Total:  %d", total);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_UpdateScreen(); 
 		
 	}
 	if(buttontwopulsed == 4)	//Select in menu send to web
 	{
+		char uartComAT[100];
 		SSD1306_Clear();
-   	UpPage();
+		SSD1306_GotoXY (10,10);                     
+		sprintf(uartComAT, "Red:    %d", rojo);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,20);                 
+		sprintf(uartComAT, "Green:  %d", verde);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,30);               
+		sprintf(uartComAT, "Blue:   %d", azul);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,40);                
+		sprintf(uartComAT, "Purple: %d", morado);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,50);  
+		total = rojo+verde+azul+morado;
+		sprintf(uartComAT, "Total:  %d", total);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_UpdateScreen(); 	
+		
+		InitESP();
+		
+		while(HAL_GPIO_ReadPin(GreenLed_GPIO_Port, GreenLed_Pin) == 0)
+		{
+			HAL_GPIO_TogglePin(OrangeLed_GPIO_Port, OrangeLed_Pin);
+			HAL_Delay(200);
+		}
+		UpPage();	
 	}
 }
 /*##########################################################################################################*/
