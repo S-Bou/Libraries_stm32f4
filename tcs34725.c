@@ -12,9 +12,9 @@
 		3v3 -> 3.3V or VIN -> 5v
 		GND -> GND
 		
-	- FTDI232 for serial comunication -> USART1:
-		RX -> PA10 USART1_TX
-		TX -> PA9  USART1_RX
+	- FTDI232 for serial comunication -> USART2:
+		RX -> PA2 USART2_TX
+		TX -> PA3 USART2_RX
 */
 /*##########################################################################################################*/
 /*

@@ -11,6 +11,9 @@ This file contains the common defines of the application.
 #include <stdint.h>
 
 #define LONGDATA 400
+#define HUARTNUM huart1
+
+extern UART_HandleTypeDef huart1;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 void InitESP(void);

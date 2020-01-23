@@ -64,7 +64,7 @@ void ButtonOnePressed(void)
 		HAL_Delay(5);
 		if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin))
 		{
-			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
+//			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 			tempBall = false;
 		}
 	}
@@ -73,7 +73,7 @@ void ButtonOnePressed(void)
 		HAL_Delay(5);
 		if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin)==GPIO_PIN_RESET)
 		{
-			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
+//			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 			//Acction when push the button:
 			ButtonTwoAction();
 			tempBall = true;
@@ -92,7 +92,7 @@ void ButtonTwoPressed(void)
 		HAL_Delay(50);
 		if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin))
 		{
-			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
+//			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 			tempBall = false;
 		}
 	}
@@ -101,7 +101,7 @@ void ButtonTwoPressed(void)
 		HAL_Delay(50);
 		if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin)==GPIO_PIN_RESET)
 		{
-			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
+//			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 		  //Acction when push the button:
 			ButtonTwoMenu();
 			if(buttoncalibrate == 1){CalibrateColour();}
@@ -135,8 +135,7 @@ void ButtonTwoAction(void)
 	if(buttontwopulsed == 4)	//Select in menu send to web
 	{
 		SSD1306_Clear();
-		
-		UpPage();
+   	UpPage();
 	}
 }
 /*##########################################################################################################*/
