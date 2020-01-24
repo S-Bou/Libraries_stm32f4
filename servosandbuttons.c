@@ -178,6 +178,10 @@ void ButtonTwoAction(void)
 		{
 			HAL_GPIO_TogglePin(OrangeLed_GPIO_Port, OrangeLed_Pin);
 			HAL_Delay(200);
+			if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin))
+			{
+				ButtonTwoMenu();
+			}
 		}
 		UpPage();	
 	}

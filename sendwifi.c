@@ -68,14 +68,25 @@ void find_str(uint8_t dataRX[])
 /*##############################################################################################*/
 void UpPage(void)											
 {													//For reset page <head><meta http-equiv=\"refresh\" content=\"5\"><h1>
-	char uartComAT[300];
+	char uartComAT[600];
 	
   sprintf(page, 
-	"<!doctype html><html><head><h1>Clasificación de colores, resultado:<br><h1></head>"
-	"<body><h2>Rojo: %d<br>Verde: %d<br>Azul: %d<br>Morado: %d<br>Total: %d"
+	"<!doctype html>"
+	"<html>"
+	"<head>"
+			"<h1 align=\"center\">Clasificación de colores, resultado:<br><h1>"
+			"<hr>"
+	"</head>"
+	"<body><h2 align=\"center\">"
+			"<p style=\"color:Red\";>Rojo: %d</p>"
+			"<p style=\"color:Green\";>Verde: %d</p>"
+			"<p style=\"color:Blue\";>Azul: %d</p>"
+			"<p style=\"color:Purple\";>Morado: %d</p>"
+			"<hr>"
+			"Total: %d"
 	"<h2></body></html>", rojo, verde, azul, morado, total);             	
 	
-	sprintf(uartComAT, "AT+CIPSEND=0,%d\r\n", strlen(page));
+	sprintf(uartComAT, "AT+CIPSEND=%d,%d\r\n", chanel-48, strlen(page));
 	HAL_UART_Transmit(&HUARTNUM, (uint8_t *)uartComAT, strlen(uartComAT), 100);
 	HAL_Delay(2000);
 	sprintf(uartComAT, "%s\r\n", page);

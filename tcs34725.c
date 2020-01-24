@@ -74,9 +74,6 @@ void Init_cts34725(void)
 	//3) Write the Enable Register (address code: 128 = 0x80) to 3 -> enables the ADC and turns the device on.
 	unsigned char Enable_register[2] = {0x80, 0x03};
 	HAL_I2C_Master_Transmit(&hi2c2, Color_Sensor_Address, Enable_register, 2, 100);
-	
-	//4) Reset variables for count balls
-	rojo=0; verde=0; azul=0; morado=0; total=0;	
 }
 /*##########################################################################################################*/
 /*
@@ -332,6 +329,16 @@ void DefineColour(uint32_t colour)
 	sprintf(uartComAT, "Total:  %d", total);
 	SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 	SSD1306_UpdateScreen();                   
+}
+/*##########################################################################################################*/
+void resetvar(void)
+{
+		//4) Reset variables for count balls
+	rojo=0; 
+	verde=0; 
+	azul=0; 
+	morado=0; 
+	total=0;	
 }
 /*##########################################################################################################*/
 

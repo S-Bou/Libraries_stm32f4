@@ -28,6 +28,7 @@ void StartThreshold(void);
 void mapData(void);
 void CalibrateColour(void);
 void DefineColour(uint32_t colour);
+void resetvar(void);
 
 #ifdef __cplusplus
 }
