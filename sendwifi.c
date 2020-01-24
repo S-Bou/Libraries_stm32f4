@@ -41,11 +41,11 @@ void InitESP(void)
 	
 	sprintf(uartComAT, "AT+CIPMUX=1\r\n");
 	HAL_UART_Transmit(&HUARTNUM, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-	HAL_Delay(2000);
+	HAL_Delay(1000);
 	
 	sprintf(uartComAT, "AT+CIPSERVER=1,80\r\n");
 	HAL_UART_Transmit(&HUARTNUM, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-	HAL_Delay(2000);
+	HAL_Delay(1000);
 	
 	HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(RedLed_GPIO_Port, RedLed_Pin, GPIO_PIN_RESET);

@@ -16,7 +16,7 @@
 bool tempStore = true;
 bool tempBall = true;
 uint8_t buttoncalibrate = 0;
-uint8_t buttontwopulsed = 0;
+uint8_t buttonMenuCount = 0;
 extern TIM_HandleTypeDef htim3;
 extern uint8_t rojo, verde, azul, morado, total;
 
@@ -58,26 +58,26 @@ void ContinuousServo(uint8_t init, uint8_t finish)
 	This function reduces the posibility for the button do multiple signals.
 	In this proyect I establishes the pin PE0 as input (Pull-Up), with the user name "ButtonOne"
 */
-void ButtonOnePressed(void)
+void ButtonAceptPressed(void)
 {
-		if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin) && tempBall)
+		if(HAL_GPIO_ReadPin(ButtonAcept_GPIO_Port, ButtonAcept_Pin) && tempBall)
 	{
 		HAL_Delay(5);
-		if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin))
+		if(HAL_GPIO_ReadPin(ButtonAcept_GPIO_Port, ButtonAcept_Pin))
 		{
 //			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 			tempBall = false;
 		}
 	}
-	else if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin)==GPIO_PIN_RESET)
+	else if(HAL_GPIO_ReadPin(ButtonAcept_GPIO_Port, ButtonAcept_Pin)==GPIO_PIN_RESET)
 	{
 		HAL_Delay(5);
-		if(HAL_GPIO_ReadPin(ButtonOne_GPIO_Port, ButtonOne_Pin)==GPIO_PIN_RESET)
+		if(HAL_GPIO_ReadPin(ButtonAcept_GPIO_Port, ButtonAcept_Pin)==GPIO_PIN_RESET)
 		{
 //			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 			//Acction when push the button:
 			if(buttoncalibrate == 1){CalibrateColour();}
-			ButtonTwoAction();
+			ButtonMenuAction();
 			tempBall = true;
 		}
 	}
@@ -85,27 +85,27 @@ void ButtonOnePressed(void)
 /*##########################################################################################################*/
 /*
 	This function reduces the posibility for the button do multiple signals.
-	In this proyect I establishes the pin PC13 as input (Pull-Up), with the user name "ButtonTwo"
+	In this proyect I establishes the pin PC13 as input (Pull-Up), with the user name "ButtonMenu"
 */
-void ButtonTwoPressed(void)
+void ButtonMenuPressed(void)
 {
-		if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin) && tempStore)
+		if(HAL_GPIO_ReadPin(ButtonMenu_GPIO_Port, ButtonMenu_Pin) && tempStore)
 	{
 		HAL_Delay(50);
-		if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin))
+		if(HAL_GPIO_ReadPin(ButtonMenu_GPIO_Port, ButtonMenu_Pin))
 		{
 //			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 			tempBall = false;
 		}
 	}
-	else if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin)==GPIO_PIN_RESET)
+	else if(HAL_GPIO_ReadPin(ButtonMenu_GPIO_Port, ButtonMenu_Pin)==GPIO_PIN_RESET)
 	{
 		HAL_Delay(50);
-		if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin)==GPIO_PIN_RESET)
+		if(HAL_GPIO_ReadPin(ButtonMenu_GPIO_Port, ButtonMenu_Pin)==GPIO_PIN_RESET)
 		{
 //			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 		  //Acction when push the button:
-			ButtonTwoMenu();
+			ButtonMenu();
 			tempBall = true;
 		}
 	}
@@ -115,15 +115,15 @@ void ButtonTwoPressed(void)
 	This function reduces the posibility for the button do multiple signals.
 	In this proyect I establishes the pin PC13 as input (Pull-Up), with the user name "ButtonTwo"
 */
-void ButtonTwoAction(void)
+void ButtonMenuAction(void)
 {
-	if(buttontwopulsed == 1)	//Select in menu sorter
+	if(buttonMenuCount == 1)	//Select in menu sorter
 	{
 		SSD1306_Clear();
 		CicleColor();
-		buttontwopulsed = 0;
+		buttonMenuCount = 0;
 	}
-	if(buttontwopulsed == 2)	//Select in menu send to web
+	if(buttonMenuCount == 2)	//Select in menu send to web
 	{
 		char uartComAT[100];
 		SSD1306_Clear();
@@ -157,15 +157,15 @@ void ButtonTwoAction(void)
 //			}
 		}
 		UpPage();	
-		buttontwopulsed = 0;
+		buttonMenuCount = 0;
 	}
-	if(buttontwopulsed == 3)	//Select in menu reset counter
+	if(buttonMenuCount == 3)	//Select in menu reset counter
 	{	
 		SSD1306_Clear();
 		CalibrateColour();
-		buttontwopulsed = 0;
+		buttonMenuCount = 0;
 	}
-	if(buttontwopulsed == 4)	//Select in menu calibration
+	if(buttonMenuCount == 4)	//Select in menu calibration
 	{
 		rojo=0; verde=0; azul=0; morado=0; total=0;
 		char uartComAT[100];
@@ -187,7 +187,7 @@ void ButtonTwoAction(void)
 		sprintf(uartComAT, "Total:  %d", total);
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_UpdateScreen(); 
-		buttontwopulsed = 0;
+		buttonMenuCount = 0;
 	}
 }
 /*##########################################################################################################*/
@@ -195,12 +195,12 @@ void ButtonTwoAction(void)
 	Show menu in screen oled.
 	In this proyect I establishes the pin PC13 as input (Pull-Up), with the user name "ButtonTwo"
 */
-void ButtonTwoMenu(void)
+void ButtonMenu(void)
 {
-	buttontwopulsed++;
+	buttonMenuCount++;
 	char uartComAT[100];
 	
-	if(buttontwopulsed == 1)
+	if(buttonMenuCount == 1)
 	{
 		SSD1306_Clear();
 		SSD1306_GotoXY (14,2);                    
@@ -221,7 +221,7 @@ void ButtonTwoMenu(void)
 		SSD1306_DrawFilledCircle(5, 19, 4, 1);
 		SSD1306_UpdateScreen(); 
 	}
-	else if(buttontwopulsed == 2)
+	else if(buttonMenuCount == 2)
 	{
 		SSD1306_Clear();
 		SSD1306_GotoXY (14,2);                    
@@ -242,7 +242,7 @@ void ButtonTwoMenu(void)
 		SSD1306_DrawFilledCircle(5, 31, 4, 1);
 		SSD1306_UpdateScreen(); 
 	}
-	else if(buttontwopulsed == 3)
+	else if(buttonMenuCount == 3)
 	{
 		SSD1306_Clear();
 		SSD1306_GotoXY (14,2);                    
@@ -263,7 +263,7 @@ void ButtonTwoMenu(void)
 		SSD1306_DrawFilledCircle(5, 43, 4, 1);
 		SSD1306_UpdateScreen(); 
 	}
-	else if(buttontwopulsed == 4)
+	else if(buttonMenuCount == 4)
 	{
 		SSD1306_Clear();
 		SSD1306_GotoXY (14,2);                    
@@ -285,7 +285,7 @@ void ButtonTwoMenu(void)
 		SSD1306_UpdateScreen();
 	}
 	
-	if(buttontwopulsed == 5){buttontwopulsed = 0;}
+	if(buttonMenuCount == 5){buttonMenuCount = 0;}
 }
 /*########## FUNCTIONS FOR usDELAYS ########################################################################*/
 //void usDelay(uint32_t uSec)

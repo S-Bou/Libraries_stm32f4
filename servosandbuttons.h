@@ -28,13 +28,13 @@ extern "C" {
 //#define SRNARANJA 50
 #define SRINDETERMINADO 50
 
-void ButtonOnePressed(void);
-void ButtonTwoPressed(void);
+void ButtonAceptPressed(void);
+void ButtonMenuPressed(void);
 void PositionServoSensor(uint8_t angle);
 void PositionServoRamp(uint8_t angle);
 void ContinuousServo(uint8_t init, uint8_t finish);
-void ButtonTwoMenu(void);
-void ButtonTwoAction(void);
+void ButtonMenu(void);
+void ButtonMenuAction(void);
 void calibrateServos(void);
 
 #ifdef __cplusplus
