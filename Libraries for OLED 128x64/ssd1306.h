@@ -46,11 +46,11 @@ SDA        |PB7          |Serial data line
  */
 
 #include "stm32f4xx_hal.h"
-
+#include "main.h"
 #include "fonts.h"
-
 #include "stdlib.h"
 #include "string.h"
+
 
 
 /* I2C address */

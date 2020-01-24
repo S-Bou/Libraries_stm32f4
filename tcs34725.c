@@ -166,7 +166,7 @@ void Show_console(void)
 /*##########################################################################################################*/
 void CicleColor(void)
 {
-	for(uint8_t i=0; i<4; i++)
+	for(uint8_t i=0; i<12; i++)
 	{
 	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 	PositionServoSensor(POSDOS);	//Positions degrees
@@ -191,7 +191,7 @@ void CalibrateColour(void)
 	if(buttoncalibrate == 0)
 	{
 		sprintf(uartComAT, "Put balls in this order: Red, Green, Blue and Purple.\r\n"
-		                   "And press button 1 ...\r\n");
+		                   "And press button acept ...\r\n");
 		HAL_UART_Transmit(&huart2, (uint8_t *)uartComAT, strlen(uartComAT), 100);
 		
 		SSD1306_GotoXY (0,10);  
@@ -203,7 +203,7 @@ void CalibrateColour(void)
 		SSD1306_GotoXY (0,40);  
 		SSD1306_Puts ("And press button ", &Font_7x10, 1);  
 		SSD1306_GotoXY (0,50);  
-		SSD1306_Puts ("Acept...", &Font_7x10, 1); 		
+		SSD1306_Puts ("acept...", &Font_7x10, 1); 		
 		SSD1306_UpdateScreen(); 
 		
 		buttoncalibrate = 1;
@@ -228,6 +228,7 @@ void CalibrateColour(void)
 	
 	if(counter == 0)
 	{
+		PositionServoRamp(SRROJO);
 		SSD1306_Clear();
 		SSD1306_GotoXY (14,2);                    
 		SSD1306_Puts ("Calibrating...", &Font_7x10, 1);  
@@ -238,6 +239,7 @@ void CalibrateColour(void)
 	}
 	else if(counter == 1)
 	{  
+		PositionServoRamp(SRVERDE);
 		SSD1306_GotoXY (14, 28);               
 		sprintf(uartComAT, "Green  = %d", color);
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
@@ -245,6 +247,7 @@ void CalibrateColour(void)
 	}
 	else if(counter == 2)
 	{   
+		PositionServoRamp(SRAZUL);
 		SSD1306_GotoXY (14, 41);                
 		sprintf(uartComAT, "Blue   = %d", color);
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
@@ -252,6 +255,7 @@ void CalibrateColour(void)
 	}
 	else if(counter == 3)
 	{  
+		PositionServoRamp(SRMORADO);
 		SSD1306_GotoXY (14, 53);                
 		sprintf(uartComAT, "Purple = %d", color);
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);  

@@ -20,10 +20,11 @@ extern "C" {
 #define POSTRES 95
 
 //Servo Rampa
-#define SRROJO 93
-#define SRVERDE 80
-#define SRAZUL 70
-#define SRMORADO 60
+#define SRINICIO 67
+#define SRROJO 84
+#define SRVERDE 73
+#define SRAZUL 62
+#define SRMORADO 53
 //#define SRNARANJA 50
 #define SRINDETERMINADO 50
 
@@ -34,6 +35,7 @@ void PositionServoRamp(uint8_t angle);
 void ContinuousServo(uint8_t init, uint8_t finish);
 void ButtonTwoMenu(void);
 void ButtonTwoAction(void);
+void calibrateServos(void);
 
 #ifdef __cplusplus
 }

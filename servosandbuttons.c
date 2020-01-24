@@ -1,5 +1,5 @@
 
-#include "servosandbuttons.h"
+//#include "servosandbuttons.h"
 #include "tcs34725.h"
 
 /*##########################################################################################################*/
@@ -34,16 +34,17 @@ Steps for config timer:
 	
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 */
+/*##########################################################################################################*/
 void PositionServoSensor(uint8_t angle)	
 {
 	htim3.Instance->CCR1 = angle;
 }
-
+/*##########################################################################################################*/
 void PositionServoRamp(uint8_t angle)	
 {
 	htim3.Instance->CCR2 = angle;
 }
-
+/*##########################################################################################################*/
 void ContinuousServo(uint8_t init, uint8_t finish)
 {
 	for(uint8_t i=init; i<finish; i++)
@@ -75,6 +76,7 @@ void ButtonOnePressed(void)
 		{
 //			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 			//Acction when push the button:
+			if(buttoncalibrate == 1){CalibrateColour();}
 			ButtonTwoAction();
 			tempBall = true;
 		}
@@ -104,7 +106,6 @@ void ButtonTwoPressed(void)
 //			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
 		  //Acction when push the button:
 			ButtonTwoMenu();
-			if(buttoncalibrate == 1){CalibrateColour();}
 			tempBall = true;
 		}
 	}
@@ -120,37 +121,9 @@ void ButtonTwoAction(void)
 	{
 		SSD1306_Clear();
 		CicleColor();
+		buttontwopulsed = 0;
 	}
-	if(buttontwopulsed == 2)	//Select in menu calibration
-	{
-		SSD1306_Clear();
-		CalibrateColour();
-	}
-	if(buttontwopulsed == 3)	//Select in menu reset counter
-	{
-		rojo=0; verde=0; azul=0; morado=0; total=0;
-		char uartComAT[100];
-		SSD1306_Clear();
-		SSD1306_GotoXY (10,10);                     
-		sprintf(uartComAT, "Red:    %d", rojo);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
-		SSD1306_GotoXY (10,20);                 
-		sprintf(uartComAT, "Green:  %d", verde);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
-		SSD1306_GotoXY (10,30);               
-		sprintf(uartComAT, "Blue:   %d", azul);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
-		SSD1306_GotoXY (10,40);                
-		sprintf(uartComAT, "Purple: %d", morado);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
-		SSD1306_GotoXY (10,50);  
-		total = rojo+verde+azul+morado;
-		sprintf(uartComAT, "Total:  %d", total);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
-		SSD1306_UpdateScreen(); 
-		
-	}
-	if(buttontwopulsed == 4)	//Select in menu send to web
+	if(buttontwopulsed == 2)	//Select in menu send to web
 	{
 		char uartComAT[100];
 		SSD1306_Clear();
@@ -178,12 +151,43 @@ void ButtonTwoAction(void)
 		{
 			HAL_GPIO_TogglePin(OrangeLed_GPIO_Port, OrangeLed_Pin);
 			HAL_Delay(200);
-			if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin))
-			{
-				ButtonTwoMenu();
-			}
+//			if(HAL_GPIO_ReadPin(ButtonTwo_GPIO_Port, ButtonTwo_Pin))
+//			{
+//				ButtonTwoMenu();
+//			}
 		}
 		UpPage();	
+		buttontwopulsed = 0;
+	}
+	if(buttontwopulsed == 3)	//Select in menu reset counter
+	{	
+		SSD1306_Clear();
+		CalibrateColour();
+		buttontwopulsed = 0;
+	}
+	if(buttontwopulsed == 4)	//Select in menu calibration
+	{
+		rojo=0; verde=0; azul=0; morado=0; total=0;
+		char uartComAT[100];
+		SSD1306_Clear();
+		SSD1306_GotoXY (10,10);                     
+		sprintf(uartComAT, "Red:    %d", rojo);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,20);                 
+		sprintf(uartComAT, "Green:  %d", verde);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,30);               
+		sprintf(uartComAT, "Blue:   %d", azul);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,40);                
+		sprintf(uartComAT, "Purple: %d", morado);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_GotoXY (10,50);  
+		total = rojo+verde+azul+morado;
+		sprintf(uartComAT, "Total:  %d", total);
+		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+		SSD1306_UpdateScreen(); 
+		buttontwopulsed = 0;
 	}
 }
 /*##########################################################################################################*/
@@ -206,13 +210,13 @@ void ButtonTwoMenu(void)
 		sprintf(uartComAT, "1. Sorter");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 28);               
-		sprintf(uartComAT, "2. Calibration");
+		sprintf(uartComAT, "2. Send to web");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 41);                
-		sprintf(uartComAT, "3. Reset counter");
+		sprintf(uartComAT, "3. Calibration");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 53);                
-		sprintf(uartComAT, "4. Send to web");
+		sprintf(uartComAT, "4. Reset counter");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);
 		SSD1306_DrawFilledCircle(5, 19, 4, 1);
 		SSD1306_UpdateScreen(); 
@@ -227,14 +231,14 @@ void ButtonTwoMenu(void)
 		sprintf(uartComAT, "1. Sorter");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 28);               
-		sprintf(uartComAT, "2. Calibration");
+		sprintf(uartComAT, "2. Send to web");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 41);                
-		sprintf(uartComAT, "3. Reset counter");
+		sprintf(uartComAT, "3. Calibration");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 53);                
-		sprintf(uartComAT, "4. Send to web");
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		sprintf(uartComAT, "4. Reset counter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1); 
 		SSD1306_DrawFilledCircle(5, 31, 4, 1);
 		SSD1306_UpdateScreen(); 
 	}
@@ -248,14 +252,14 @@ void ButtonTwoMenu(void)
 		sprintf(uartComAT, "1. Sorter");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 28);               
-		sprintf(uartComAT, "2. Calibration");
+		sprintf(uartComAT, "2. Send to web");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 41);                
-		sprintf(uartComAT, "3. Reset counter");
+		sprintf(uartComAT, "3. Calibration");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 53);                
-		sprintf(uartComAT, "4. Send to web");
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		sprintf(uartComAT, "4. Reset counter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1); 
 		SSD1306_DrawFilledCircle(5, 43, 4, 1);
 		SSD1306_UpdateScreen(); 
 	}
@@ -269,21 +273,21 @@ void ButtonTwoMenu(void)
 		sprintf(uartComAT, "1. Sorter");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 28);               
-		sprintf(uartComAT, "2. Calibration");
+		sprintf(uartComAT, "2. Send to web");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 41);                
-		sprintf(uartComAT, "3. Reset counter");
+		sprintf(uartComAT, "3. Calibration");
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_GotoXY (14, 53);                
-		sprintf(uartComAT, "4. Send to web");
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+		sprintf(uartComAT, "4. Reset counter");
+		SSD1306_Puts (uartComAT, &Font_7x10, 1); 
 		SSD1306_DrawFilledCircle(5, 56, 4, 1);
-		SSD1306_UpdateScreen(); 
+		SSD1306_UpdateScreen();
 	}
 	
 	if(buttontwopulsed == 5){buttontwopulsed = 0;}
 }
-/*########## FUNCTIONS FOR usDELAYS #############################################################*/
+/*########## FUNCTIONS FOR usDELAYS ########################################################################*/
 //void usDelay(uint32_t uSec)
 //	{													//We need define timer-> ejem: #define usTIM TIM5
 //	if(uSec < 2) uSec = 2;
@@ -294,10 +298,44 @@ void ButtonTwoMenu(void)
 //	while((usTIM->SR&0x0001) != 1);
 //	usTIM->SR &= ~(0x0001);
 //}
-/*##############################################################################################*/
+/*##########################################################################################################*/
 //void Delay_us(uint16_t us)
 //{
 //	__HAL_TIM_SET_COUNTER(&htim1, 0); //Set the counter value to 0
 //	while(__HAL_TIM_GET_COUNTER(&htim1) < us);	//Wait for the counter to reach the us input in the parameter
 //}
-/*###############################################################################################*/
+/*##########################################################################################################*/
+void calibrateServos(void)
+{
+	uint16_t time = 2000;
+	
+	PositionServoRamp(SRROJO);
+	HAL_Delay(time);
+	PositionServoRamp(SRVERDE);
+	HAL_Delay(time);
+	PositionServoRamp(SRAZUL);
+	HAL_Delay(time);
+	PositionServoRamp(SRMORADO);
+	HAL_Delay(time);
+	PositionServoRamp(SRINDETERMINADO);
+	HAL_Delay(time);
+
+	for(uint8_t i=0; i<4; i++)
+	{
+	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
+	PositionServoSensor(POSDOS);	//Positions degrees
+	HAL_Delay(1000);
+		
+	Read_cts34725();
+  HAL_Delay(1000);
+	Show_console();
+	
+	PositionServoSensor(POSTRES);	//Positions degrees
+	HAL_Delay(500);
+		
+	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_RESET);
+	PositionServoSensor(POSUNO);	//Positions degrees
+	HAL_Delay(1000);
+	}
+}
+/*##########################################################################################################*/

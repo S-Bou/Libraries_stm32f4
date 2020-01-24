@@ -18,13 +18,13 @@ Description:
    or indirectly by this software, read more about this on the GNU General Public License.								
 */
 
-#include "stm32f4xx_hal.h"
+#include "main.h"
 
 //Typedefs
 //1. data size
 typedef enum
-{
-	DATA_TYPE_8=0,
+{															
+	DATA_TYPE_8,
 	DATA_TYPE_16,
 	DATA_TYPE_32,
 }DataTypeDef;

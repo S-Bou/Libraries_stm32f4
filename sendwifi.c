@@ -13,7 +13,7 @@
 #include "sendwifi.h"
 
 float distance = 66.66;
-char page[200];
+
 uint32_t numTicks;
 uint8_t chanel=66;
 uint8_t rxData[LONGDATA];
@@ -67,8 +67,9 @@ void find_str(uint8_t dataRX[])
 }
 /*##############################################################################################*/
 void UpPage(void)											
-{													//For reset page <head><meta http-equiv=\"refresh\" content=\"5\"><h1>
-	char uartComAT[600];
+{									//"<meta http-equiv=\"refresh\" content=\"15\">" //For reset page each 15 sec
+	char page[700];
+	char uartComAT[700];
 	
   sprintf(page, 
 	"<!doctype html>"
@@ -83,15 +84,21 @@ void UpPage(void)
 			"<p style=\"color:Blue\";>Azul: %d</p>"
 			"<p style=\"color:Purple\";>Morado: %d</p>"
 			"<hr>"
-			"Total: %d"
+			"<p style=\"color:Black\";>Total: %d</p>"
+				"<form method=\"get\"action=\"http://192.168.1.16/\">"
+					"<button type=\"submit\" style=\"height: 50px; width: 150px;\">"
+						"<b>Reiniciar página</b>"
+					"</button>"
+				"</form>"
 	"<h2></body></html>", rojo, verde, azul, morado, total);             	
 	
 	sprintf(uartComAT, "AT+CIPSEND=%d,%d\r\n", chanel-48, strlen(page));
 	HAL_UART_Transmit(&HUARTNUM, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-	HAL_Delay(2000);
+	HAL_Delay(500);
 	sprintf(uartComAT, "%s\r\n", page);
+	HAL_Delay(500);
 	HAL_UART_Transmit(&HUARTNUM, (uint8_t *)uartComAT, strlen(uartComAT), 100);
-	HAL_Delay(3000);
+	HAL_Delay(2000);
 	sprintf(uartComAT, "AT+CIPCLOSE=%d\r\n", chanel-48);
 	HAL_UART_Transmit(&HUARTNUM, (uint8_t *)uartComAT, strlen(uartComAT), 100);
 	
@@ -101,3 +108,6 @@ void UpPage(void)
 	HAL_GPIO_WritePin(OrangeLed_GPIO_Port, OrangeLed_Pin, GPIO_PIN_RESET);
 }
 /*##############################################################################################*/
+
+
+
