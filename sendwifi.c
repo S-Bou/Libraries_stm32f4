@@ -67,9 +67,12 @@ void find_str(uint8_t dataRX[])
 }
 /*##############################################################################################*/
 void UpPage(void)											
-{									//"<meta http-equiv=\"refresh\" content=\"15\">" //For reset page each 15 sec
+{									
 	char page[700];
 	char uartComAT[700];
+	
+	//"<meta http-equiv=\"refresh\" content=\"15\">" //For reset page each 15 sec
+	//<body style="background-color:red;"></body>		 //For change background color 
 	
   sprintf(page, 
 	"<!doctype html>"

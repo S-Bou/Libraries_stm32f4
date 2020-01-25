@@ -8,8 +8,8 @@
 	----------
 	- Servo sensor of colours: -> PA6 TIM3_CH1
 	- Servo ramp: --------------> PA7 TIM3_CH2
-	- Button 1: ----------------> PE0 GPIO_Input with Pull-up
-	- Button 2: ----------------> PE5 GPIO_Input with Pull-up
+	- Button Acept: ------------> PE0 GPIO_Input with Pull-up
+	- Button Menu: -------------> PE5 GPIO_Input with Pull-up
 */
 /*##########################################################################################################*/
 
