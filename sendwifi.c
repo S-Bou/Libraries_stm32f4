@@ -71,17 +71,18 @@ void UpPage(void)
 	char page[700];
 	char uartComAT[700];
 	
-	//"<meta http-equiv=\"refresh\" content=\"15\">" //For reset page each 15 sec
+	//"<head><meta http-equiv=\"refresh\" content=\"15\">" //For reset page each 15 sec
 	//<body style="background-color:red;"></body>		 //For change background color 
 	
   sprintf(page, 
 	"<!doctype html>"
 	"<html>"
 	"<head>"
-			"<h1 align=\"center\">Clasificación de colores, resultado:<br><h1>"
-			"<hr>"
+			"<meta http-equiv=\"refresh\" content=\";URL=refrescar.html\">"
 	"</head>"
-	"<body><h2 align=\"center\">"
+	"<body><h2 align=\"center\" style=\"background-color:silver;>"
+			"<p style=\"color:Black\";><font size = 7>Clasificación por colores:</font></p>"
+			"<hr>"
 			"<p style=\"color:Red\";>Rojo: %d</p>"
 			"<p style=\"color:Green\";>Verde: %d</p>"
 			"<p style=\"color:Blue\";>Azul: %d</p>"

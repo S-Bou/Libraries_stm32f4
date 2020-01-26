@@ -13,6 +13,9 @@
 
 extern TIM_HandleTypeDef htim9;
 
+void usDelay(uint32_t uSec);
+void Delay_us(uint16_t us);
+
 #ifdef __cplusplus
 }
 #endif

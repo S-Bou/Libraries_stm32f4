@@ -145,7 +145,7 @@ void ButtonMenuAction(void)
 		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
 		SSD1306_UpdateScreen(); 	
 		
-		InitESP();
+//		InitESP();
 		
 		while(HAL_GPIO_ReadPin(GreenLed_GPIO_Port, GreenLed_Pin) == 0)
 		{
