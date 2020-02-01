@@ -24,9 +24,9 @@ extern "C" {
 #define SRROJO 84
 #define SRVERDE 73
 #define SRAZUL 62
-#define SRMORADO 53
+#define SRMORADO 51
 //#define SRNARANJA 50
-#define SRINDETERMINADO 50
+#define SRINDETERMINADO 43
 
 void ButtonAceptPressed(void);
 void ButtonMenuPressed(void);

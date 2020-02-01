@@ -214,7 +214,7 @@ void CalibrateColour(void)
 
 		uint8_t counter = 0;
 		
-		for(counter=0; counter<4; counter++)
+		for(counter=0; counter<=4; counter++)
 		{
 			HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 			PositionServoSensor(POSDOS);	//Positions degrees
@@ -226,42 +226,47 @@ void CalibrateColour(void)
 	
 			ColorsThreshold[counter] = color;
 	
-	if(counter == 0)
-	{
-		PositionServoRamp(SRROJO);
-		SSD1306_Clear();
-		SSD1306_GotoXY (14,2);                    
-		SSD1306_Puts ("Calibrating...", &Font_7x10, 1);  
-		SSD1306_GotoXY (14, 16);                 
-		sprintf(uartComAT, "Red    = %d", color);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
-		SSD1306_UpdateScreen(); 
-	}
-	else if(counter == 1)
-	{  
-		PositionServoRamp(SRVERDE);
-		SSD1306_GotoXY (14, 28);               
-		sprintf(uartComAT, "Green  = %d", color);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
-		SSD1306_UpdateScreen(); 
-	}
-	else if(counter == 2)
-	{   
-		PositionServoRamp(SRAZUL);
-		SSD1306_GotoXY (14, 41);                
-		sprintf(uartComAT, "Blue   = %d", color);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);   
-		SSD1306_UpdateScreen(); 
-	}
-	else if(counter == 3)
-	{  
-		PositionServoRamp(SRMORADO);
-		SSD1306_GotoXY (14, 53);                
-		sprintf(uartComAT, "Purple = %d", color);
-		SSD1306_Puts (uartComAT, &Font_7x10, 1);  
-		SSD1306_UpdateScreen(); 
-		Store_Colors();
-	}
+				if(counter == 0)
+				{
+					PositionServoRamp(SRROJO);
+					SSD1306_Clear();
+					SSD1306_GotoXY (14,2);                    
+					SSD1306_Puts ("Calibrating...", &Font_7x10, 1);  
+					SSD1306_GotoXY (14, 16);                 
+					sprintf(uartComAT, "Red    = %d", color);
+					SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+					SSD1306_UpdateScreen(); 
+				}
+				else if(counter == 1)
+				{  
+					PositionServoRamp(SRVERDE);
+					SSD1306_GotoXY (14, 28);               
+					sprintf(uartComAT, "Green  = %d", color);
+					SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+					SSD1306_UpdateScreen(); 
+				}
+				else if(counter == 2)
+				{   
+					PositionServoRamp(SRAZUL);
+					SSD1306_GotoXY (14, 41);                
+					sprintf(uartComAT, "Blue   = %d", color);
+					SSD1306_Puts (uartComAT, &Font_7x10, 1);   
+					SSD1306_UpdateScreen(); 
+				}
+				else if(counter == 3)
+				{  
+					PositionServoRamp(SRMORADO);
+					SSD1306_GotoXY (14, 53);                
+					sprintf(uartComAT, "Purple = %d", color);
+					SSD1306_Puts (uartComAT, &Font_7x10, 1);  
+					SSD1306_UpdateScreen(); 
+//			  Store_Colors();
+				}
+				else if(counter == 4)
+				{  
+					PositionServoRamp(SRINDETERMINADO);
+					Store_Colors();
+				}
 			
 			PositionServoSensor(POSTRES);	//Positions degrees
 			HAL_Delay(500);
