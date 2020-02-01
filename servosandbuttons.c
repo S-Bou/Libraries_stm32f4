@@ -2,14 +2,12 @@
 //#include "servosandbuttons.h"
 #include "tcs34725.h"
 
-/*##########################################################################################################*/
+/*############################## CONNECTIONS ################################################################*/
 /*
-	CONECTIONS
-	----------
-	- Servo sensor of colours: -> PA6 TIM3_CH1
-	- Servo ramp: --------------> PA7 TIM3_CH2
-	- Button Acept: ------------> PE0 GPIO_Input with Pull-up
-	- Button Menu: -------------> PE5 GPIO_Input with Pull-up
+	- Servo sensor of colours: -> Wire orange from servo to PA6 TIM3_CH1
+	- Servo ramp: --------------> Wire orange from servo to PA7 TIM3_CH2
+	- Button Acept: ------------> Wire green from button to PE0 GPIO_Input with Pull-up
+	- Button Menu: -------------> Wire white fron button to PE5 GPIO_Input with Pull-up
 */
 /*##########################################################################################################*/
 

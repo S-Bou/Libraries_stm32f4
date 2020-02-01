@@ -1,22 +1,19 @@
-
+/*############################## INCLUDES ###################################################################*/
 #include "tcs34725.h"
-
-/*##########################################################################################################*/
+/*############################## CONNECTIONS ################################################################*/
 /*
-	CONECTIONS
-	----------
 	- Sensor of colors -> I2C1:
-		SCL -> PB10 I2C1_SCL Serial clock line
-		SDA -> PB11 I2C1_SDA Serial data line
-		LED -> PB9 GPIO_Output output level -> Low
-		3v3 -> 3.3V or VIN -> 5v
-		GND -> GND
+		SCL -> Wire orange from TCS to PB10 I2C1_SCL Serial clock line
+		SDA -> Wire yellow from TCS to PB11 I2C1_SDA Serial data line
+		LED -> Wire purple from TCS to PB9 GPIO_Output output level -> Low
+		3v3 -> Wire red   from TCS to protoboard 3.3V or VIN -> 5v
+		GND -> Wire black from TCS to protoboard GND
 		
 	- FTDI232 for serial comunication -> USART2:
-		RX -> PA2 USART2_TX
-		TX -> PA3 USART2_RX
+		RX -> Wire black from FTDI to PA2 USART2_TX
+		TX -> Wire white from FTDI to PA3 USART2_RX
 */
-/*##########################################################################################################*/
+/*############################## VARIABLES ###################################################################*/
 /*
 	The slave address of the color sensor is 41 = 0x29.
 	
@@ -37,7 +34,7 @@ uint16_t Clear_value, Red_value, Green_value, Blue_value;
 uint32_t color = 0;
 uint32_t ColorsThreshold[4] = {0, 0, 0, 0};
 
-/*##########################################################################################################*/
+/*############################# FUNCTIONS #######################################################################*/
 void Test_cts34725(void)
 {
 	unsigned char buffer[1] = {0x92};

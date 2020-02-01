@@ -20,6 +20,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
    ----------------------------------------------------------------------
  */
+/*############################## CONNECTIONS ################################################################*/
+/*
+	GND -> to GND of protoboard
+	VCC -> to %v of protoboard
+	SCL -> Wire orange from LCD to PB6 I2C1_SCL
+	SDA -> Wire yellow from LCD to PB7 I2C1_SDA
+*/
+/*##########################################################################################################*/
 #include "ssd1306.h"
 
 extern I2C_HandleTypeDef hi2c1;
