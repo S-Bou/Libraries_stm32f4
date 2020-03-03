@@ -23,10 +23,10 @@ void GPIO_Output_Config(void) //configura apropiadamente la GPIO
 	puerto.GPIO_Mode  = GPIO_Mode_OUT;
 	puerto.GPIO_OType = GPIO_OType_PP; 
 	puerto.GPIO_Speed = GPIO_Speed_100MHz;  
-	puerto.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+	puerto.GPIO_PuPd  = GPIO_PuPd_UP;
 	GPIO_Init(GPIOD, &puerto);	
 	/*Configure GPIO pin Output Level as RESET, use GPIO_SetBits() for init as SET*/
-  GPIO_ResetBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+  //GPIO_ResetBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
 }
 /*################################### FUNCTION 2 ###########################################################*/
 void GPIO_Input_Config(void) 

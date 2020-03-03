@@ -35,17 +35,15 @@ void ButtonUserPressed(void)
 /*###################################### FUNCTIONS FOR PROBE INTERRUPT #####################################*/
 void pruebaEXTint(void)
 {
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);	//Led Green PD12 on
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);	//Led Red   PD14 on
 	//HAL_Delay(500);
-	Delay_us(50000);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);	//Led Orange PD13 on
+	HAL_Delay(1000);
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);	//Led Blue   PD15 on
 	//Delay_us(50000);
 	HAL_Delay(1000);
 	
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);	//Led Green  PD12 off
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);	//Led Orange PD13 off
+//	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);	//Led Green  PD12 off
+//	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);	//Led Orange PD13 off
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);  //Led Red    PD14 on
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);	//Led Blue   PD15 on
 }
