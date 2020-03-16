@@ -163,8 +163,9 @@ void Show_console(void)
 /*##########################################################################################################*/
 void CicleColor(void)
 {
-	for(uint8_t i=0; i<12; i++)
-	{
+	//for(uint8_t i=0; i<12; i++)
+//	if(HAL_GPIO_ReadPin(LaserSensor_GPIO_Port, LaserSensor_Pin) == 0)
+//	{
 	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_SET);
 	PositionServoSensor(POSDOS);	//Positions degrees
 	HAL_Delay(1000);
@@ -179,7 +180,7 @@ void CicleColor(void)
 	HAL_GPIO_WritePin(LedSensor_GPIO_Port, LedSensor_Pin, GPIO_PIN_RESET);
 	PositionServoSensor(POSUNO);	//Positions degrees
 	HAL_Delay(1000);
-	}
+//	}
 }
 /*##########################################################################################################*/
 void CalibrateColour(void)

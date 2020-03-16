@@ -23,7 +23,7 @@
 /*############################## CONNECTIONS ################################################################*/
 /*
 	GND -> to GND of protoboard
-	VCC -> to %v of protoboard
+	VCC -> to 3V3 of protoboard
 	SCL -> Wire orange from LCD to PB6 I2C1_SCL
 	SDA -> Wire yellow from LCD to PB7 I2C1_SDA
 */

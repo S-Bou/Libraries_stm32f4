@@ -18,7 +18,7 @@ uint8_t buttonMenuCount = 0;
 extern TIM_HandleTypeDef htim3;
 extern uint8_t rojo, verde, azul, morado, total;
 
-/*########## FUNCTIONS FOR SERVOS ###############################################################*/
+/*###################### FUNCTIONS FOR SERVOS ###############################################################*/
 /*
 Steps for config timer:
 	- Select timer and chanel, in this case TIM3 Channel 1.
@@ -92,7 +92,7 @@ void ButtonMenuPressed(void)
 		HAL_Delay(50);
 		if(HAL_GPIO_ReadPin(ButtonMenu_GPIO_Port, ButtonMenu_Pin))
 		{
-//			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
 			tempBall = false;
 		}
 	}
@@ -115,10 +115,19 @@ void ButtonMenuPressed(void)
 */
 void ButtonMenuAction(void)
 {
+	SSD1306_Clear();
+	
 	if(buttonMenuCount == 1)	//Select in menu sorter
 	{
-		SSD1306_Clear();
-		CicleColor();
+		while(HAL_GPIO_ReadPin(ButtonMenu_GPIO_Port, ButtonMenu_Pin))
+		{
+				if(HAL_GPIO_ReadPin(LaserSensor_GPIO_Port, LaserSensor_Pin) == 0)
+				{
+						CicleColor();
+				}
+			HAL_GPIO_TogglePin(BlueLed_GPIO_Port, BlueLed_Pin);
+			HAL_Delay(500);
+		}
 		buttonMenuCount = 0;
 	}
 	if(buttonMenuCount == 2)	//Select in menu send to web
@@ -157,13 +166,13 @@ void ButtonMenuAction(void)
 		UpPage();	
 		buttonMenuCount = 0;
 	}
-	if(buttonMenuCount == 3)	//Select in menu reset counter
+	if(buttonMenuCount == 3)	//Select in menu calibration
 	{	
 		SSD1306_Clear();
 		CalibrateColour();
 		buttonMenuCount = 0;
 	}
-	if(buttonMenuCount == 4)	//Select in menu calibration
+	if(buttonMenuCount == 4)	//Select in menu reset counter
 	{
 		rojo=0; verde=0; azul=0; morado=0; total=0;
 		char uartComAT[100];

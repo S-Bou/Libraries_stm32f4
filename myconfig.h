@@ -1,5 +1,5 @@
-#ifndef __PLANTILLA_H
-#define __PLANTILLA_H
+#ifndef __MYCONFIG_H
+#define __MYCONFIG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,10 +11,11 @@ extern "C" {
 /*################################### FUNCTIONS ############################################################*/
 void GPIO_Output_Config(void);
 void GPIO_Input_Config(void);
+void Configurar_interrupcion(void);
 /*##########################################################################################################*/
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __PRUEBABOTON_H */
+#endif /* __MYCONFIG_H */
 
